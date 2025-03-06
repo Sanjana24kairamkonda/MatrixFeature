@@ -1,0 +1,31 @@
+name: CI for Matrix Builds
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]  # Operating Systems
+        node-version: [14, 16, 18]  # Node.js Versions
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run the app
+        run: npm start
+
+      - name: Verify output
+        run: node app.js
